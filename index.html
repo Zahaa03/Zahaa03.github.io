@@ -1,8 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+  <meta charset="UTF-8">
+  <title>TEST PAGE</title>
 </head>
-<body>
+
+<body style="font-family: Arial; text-align: center; margin-top: 50px;">
+
+  <h1>🚀 GitHub Pages Test</h1>
+
+  <p>If you can see this, your site is working.</p>
+
+  <h2 id="time"></h2>
+
+  <p>Refresh the page — the time should change.</p>
+
+  <script>
+    document.getElementById("time").innerText =
+      "Current time: " + new Date().toLocaleTimeString();
+  </script>
+
 </body>
 </html>
