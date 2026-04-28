@@ -1,1 +1,1 @@
-# Congratulations on solving my puzzle!
+# This is a user manual to put the puzzle back together
