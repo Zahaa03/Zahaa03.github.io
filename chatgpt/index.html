@@ -1,1 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
 
+<body>
+
+<p>Executive Summary
+Optimizing War Thunder’s Air Battle settings involves carefully tuning controls, displays, and audio to match
+your input device and playstyle (Arcade, Realistic, or Simulator battles). Key areas include the Controls
+menu (axis bindings, sensitivity curves, deadzones, filters, and trim), Game/Flight Model settings (aim
+mode, instructor/autopilot, G-tolerance and stamina effects, etc.), HUD/Camera options (reticle type,
+markers, chase camera, FOV), Graphics (render scale, level-of-detail, clouds, and effects affecting visibility),
+Audio (engine and environment volumes for hearing enemies), and Network considerations (region/ping
+settings).
+For each controls subpage, we explain its purpose, how to change settings, recommended values for
+beginners vs competitive pilots, and trade-offs. We cite Gaijin documentation and recent community guides
+for authoritative tips, and highlight common pitfalls (e.g. combining hardware/software deadzones,
+“recommended dead-zone” toggles on controllers 1 2
+). We also compare popular community presets.
+Diagrams illustrate how input axes are processed (deadzone → nonlinearity → sensitivity), and tables
+summarize key recommended values.
+Controls Settings
+Overview
+All flight controls are configured under “Controls” in the Options menu. First select “Aircraft” as the unit
+type (for air battles) and choose the appropriate Controls Setup Wizard profile (e.g. “Full Real Controls” for
+realistic/sim, or “Simplified” for arcade) 3 4
+. If you switch input devices (joystick, gamepad, mouse/
+keyboard), re-run the Wizard or manually assign each axis and button. The “Controls Setup Wizard” lets you
+auto-detect hardware, or import known profiles. To reset to defaults, open the wizard and pick a default
+scheme 5
+. After selecting the unit and profile, you see sub-pages for Flight Controls (pitch, roll, yaw,
+throttle, etc.), Weapons, View controls, and Miscellaneous.
+Input Devices (Binding and Mode)
+Mouse & Keyboard: Typically use Mouse-Aim mode. In Arcade/RB, mouse aim has two modes: “absolute”
+(aim like a joystick) or “relative” (like a cursor with acceleration). For AB and RB, “relative” (mouse-joystick) is
+common. Mouse sensitivity is set under Controls→Aircraft (Pitch/Yaw axes) and also in “Mouse sensitivity” in
+the Gameplay tab. Beginner players often lower pitch/roll sensitivity (e.g. 50–70%) to reduce over-control
+(especially to avoid flatspins 6
+). Competitive players usually use 100% (full deflection) and rely on skill.
+There is no single “best” mouse sensitivity – Warpig (a top player) notes no “right or wrong” value, but
+6
+recommends new players start lower and increase as they gain control .
+Gamepad/Controller: Open the Gamepad settings page. Disable “Use recommended dead zone” (uncheck
+it) – many players find this improves aim and responsiveness 1 7
+. Set small dead zones (~3–5%) on the
+sticks to remove drift, but not more, and turn off any hardware deadzone in Windows to avoid
+1
+compounding (some guides even suggest 0% in-game deadzone after hardware is clean) 2
+. Adjust auto-
+centering and sensitivity curves (nonlinearity) on your controller if available. Enable Aim Assist and
+Aircraft Lead Indicator as desired (Arcade mode includes a moving lead-assist reticle; Realistic players
+often turn off lead indicators for pure skill).
+Joystick/HOTAS: In Controls→Aircraft (or via Setup Wizard), bind your stick axes: pitch, roll, and optionally
+yaw (rudder). Also bind throttle (often left stick Y or separate throttle axis) and brakes/rudder pedals. In
+2
+Axis options (click each axis in the list), set small dead zones (5% is usually enough) to remove jitter .
+Enable “Use recommended dead zone” only if unsure, but advanced pilots often disable it and manually
+set ~5% in software or hardware. Set Nonlinearity (exponential curve) to ~1.3–2.0 for pitch/roll to smooth
+center movement 8 9
+. Higher nonlinearity (1.5–2.5) gives fine control near center at the cost of edge
+speed; many competitive pilots use ~2.0 for precision, whereas beginners may use ~1.2–1.5. Sensitivity
+(Multiplier): start with 1.0 (100%) so full stick travel gives full control deflection. If a plane is too twitchy,
+lower it (e.g. to 0.8–0.9), or conversely increase above 1.0 only if you have very limited stick range (rare).
+The pipeline for each axis is: Physical Input → Deadzone filter → Nonlinear (exponential curve) →
+Sensitivity multiplier → Invert (if set) → Game control. A mermaid flowchart:
+flowchart LR
+Physical["Physical Axis (joystick)"] --> DeadZone["Dead Zone Filter"]
+DeadZone --> Nonlinear["Nonlinear Curve (Exponential)"]
+Nonlinear --> Sensitivity["Sensitivity Multiplier"]
+Sensitivity --> Output["Logical Axis (game control)"]
+Recommended Values (AXIS Settings):
+•
+•
+•
+•
+•
+•
+Dead Zone: ~3–5% for stick axes; avoid >10%. Leave no deadzone (0%) if your hardware is precise.
+2
+Set it in hardware if possible .
+Nonlinearity: Beginners: ~1.2–1.5; Intermediate: ~1.5–2.0; Comp: ~2.0. (Wiki notes 1.0 = linear, 1–2.5
+8
+common range ).
+Sensitivity (Multiplier): Start 100% (1.0) for RB/SB; for Arcade you may lower to 80–90% if plane is
+too twitchy at full deflection. Pitch sensitivity often set slightly lower (e.g. 80%) than roll for better
+vertical control. Adjust in test flights.
+Yaw (Rudder): Usually much lower sensitivity or even 0% in Arcade (since turns use ailerons). In RB/
+SB rudder helps with flat spins – experienced pilots set rudder axis small (~20–30%).
+Auto-trim: Off (use trim inputs manually) for best control precision. Beginners may leave Auto-trim
+on (in Game settings) for convenience in arcade.
+Invert: Off for pitch by default (pull back = pitch up is standard), invert only if your hardware is
+upside-down or if you prefer it.
+Common binding tips: Map separate buttons for flaps, landing gear, airbrakes, and look-around. Bind “View
+left/right/up/down” to hat switch or trim buttons. For HOTAS, use throttle detents or extra buttons for WEP
+and mixture cuts. Always save/import control schemes (bottom-left save icon) before tweaking so you can
+revert.
+2
+Mouse Aim Settings
+In Controls→Aircraft (Mouse) (Arcade/Realistic modes), you can fine-tune mouse aiming. Key settings in
+the Gameplay tab also affect aim:
+•
+•
+•
+•
+Aim Mode (Arcade vs Realistic): In Arcade, an auto-pilot (“instructor”) assists turns; disable it
+10
+(uncheck “Auto-Turn” or use “Full Real Controls”) to fly freely .
+Mouse Sensitivity and Smoothing: In Gameplay → Flight Control, set mouse sensitivity (often
+100%) and toggle smoothing/acceleration off for a direct feel. “Relative control” (mouse joystick) is
+generally best in RB/SB. Beginners may enable small smoothing (dampen high-frequency jitters), but
+competitive players turn all filters off.
+G-Lock Effects: In Gameplay → Pilot/Stamina, disable G-tolerance reduction (set G-limit to 0) for
+competitive RB (some players leave it on for realism). Turn on acceleration effects and ejection
+altitude as desired.
+HUD Options: In Gameplay or Controls → Common: choose “Reticle Type = AB (Arcade)” to enable
+moving lead indicator in Arcade, or “RB Sim” for fixed reticle. Many RB pilots prefer the simpler static
+reticle (or use the “Lead Indicator” toggle to assist). Markers and nameplates: Beginners often
+enable “Allies” (green markers) and “Enemy markers” (T/0/0 icons) for situational awareness; comp
+players turn them off to avoid any aim assist.
+Protip: Lowering pitch sensitivity in Arcade helps avoid stalls and flat spins 6
+skilled pilots fly with full sensitivity (100%) and rely on trim and stick precision.
+. In Realistic battles, most
+Flight Controls (Trim, Flaps, MEC)
+War Thunder’s flight model offers advanced controls:
+•
+•
+•
+•
+Trim Axes: In Simulator mode, bind “Roll Trim” and “Pitch Trim” (and Yaw Trim if needed). Most
+players bind these to slider switches or hat on HOTAS. Apply gentle trim to relieve constant stick
+pressure. In Arcade/RB, you can leave trim off or use “Auto-trim” (in Game settings) at the cost of
+slight sim advantage.
+Flaps: Bind the two flap levels (“Flaps +” and “Flaps –”) or use instant drop (the “flaps autopilot” mode
+key). Set flaps to full (0→75 or 0→100) quickly by binding flap increase key.
+Airbrakes: Map “Airbrakes” on your stick (dual-axis possible) and/or keyboard. Useful to bleed speed
+in dives.
+Manual Engine Controls (MEC): In RB/SB you can control prop pitch, mixture, radiator manually.
+Bind keys (default Numpad 7-9) or turn on “Automatic engine controls” in Game settings if using
+joystick throttle only. MEC give slight performance edge (more control over WEP fuel and engine
+cooling).
+Recommended (Flight Controls) for beginners: use “Auto-Rudders” (if available) so rudder is linked to
+ailerons in Arcade; set “Auto-mix, auto-pitch” on to simplify. For realistic/sim, disable all autos to get full
+control. Put “Energy retaining autopilot” off (so you can turn without the game limiting you 10
+).
+3
+View and Camera Settings
+Effective situational awareness requires good view controls:
+•
+•
+•
+•
+•
+•
+Virtual Cockpit vs External Views: Use Alt+Arrows (or a mapped axis/hat) to look around. Lock
+“Mouse Look” (Alt) for cockpit view and use keys or hat to glance. Set “Head Movement” slider
+(Gameplay→Graphics) to taste. Binding a “snapview” key to quickly center view is useful.
+Chase Camera FOV: There’s a “Chase camera zoom” (default NumPad0/Enter) and “Chase camera
+vertical shift” axis (often Ctrl+Shift+Alt combos). Some players map joystick axes to camera yaw/
+pitch for orbital view. Make sure “Chase Camera Field of View” is set so that the HUD reticle isn’t
+clipped on ultrawide monitors (Gaijin has patched some issues).
+Field of View: In Graphics→Camera, set “Field of View” to a comfortable value (90–100° is common)
+to see enemies at distance, but don’t exceed monitor’s optimal FOV (else objects look tiny).
+HUD/Reticle Type: In Gameplay→View/HUD, choose the reticle style: “Arcade” shows a predictive
+firing lead; “Soviet” (if available) has a simpler gyro sight; “Distance gauge” locks the reticle relative to
+target range (useful in Sim). Generally, use the same reticle type for consistency.
+Markers: In Gameplay→Markers/Interface, disable persistent enemy markers for Realistic play.
+Enable them for Arcade or new players. Set “Marker Size” medium and “Kill icon” brief.
+Helmet/Chase Cam: Some players use “External View” (Caps Lock) briefly to assess battle, but
+competitive flying is mostly cockpit-only. If you do use chase cam, keep the camera close (no orbit)
+as large FOV can distort aim.
+HUD and Targeting
+War Thunder’s HUD symbology varies by aircraft. Use the HUD (pre-rendered) for bombing and rockets:
+switch HUD modes with the bound key (default `'). The basics:
+•
+•
+•
+•
+The fixed aiming reticle is the circle/drop mark (Arcade) or dot (RB). In Arcade AB, a “lead indicator”
+shows where to shoot. In Sim (no lead), you aim manually for deflection.
+Aircraft HUD modes: For dive-bombers, switch to CCRP mode (if available) by pre-placing a target
+point and toggling the HUD mode. The HUD Wiki explains specific symbology for jets (e.g. BU-33,
+11
+UKM-13 scopes) .
+Pitot tube/ADS: Some planes have virtual gun sights (e.g. SU-33 PBP-5). No settings here, but know
+your plane’s sight: top players adjust aim to the sight markings.
+Lead/No-Lead: In the game settings, “Enable lead indicator” (Arcade aim) helps new pilots. In
+competitive RB, many turn it off to rely on skill.
+Graphics Settings (Visibility)
+Maximize FPS and clarity for spotting:
+•
+•
+Render Resolution: Set Render Scale to 100% (native) for performance. In VR or high-res monitors,
+adjust if needed, but 100% is recommended for crisp clarity.
+Textures/LOD: In Graphics, lower Objects and Terrain detail as little as possible (they don’t affect
+visibility much), but turn Grass off (hides ground clutter). Clouds at medium or low; high clouds can
+hide planes.
+4
+•
+•
+•
+•
+•
+•
+Distance (LOD) and Clutter: Use default or high for distant objects, but some top players lower
+Environment/Objects detail (for FPS) without much visibility loss.
+Effects: Turn off Motion Blur, Depth of Field, and Bloom. These add realism but can obscure fast-
+moving targets.
+Antialiasing: MSAA or SMAA 2x is fine. Some prefer FXAA for performance. Reduce it if it blurs
+distant targets.
+HUD Scaling: Set “HUD size” so that gauges/reticles are legible but not too large. On ultrawide,
+12
+ensure the reticle stays on screen .
+Full-screen vs Borderless: Use exclusive full-screen for lowest latency (some players report
+borderless adds delay).
+VR Specific: In VR (OpenXR), maximize supersampling (via SteamVR or headset tool) while
+maintaining 90+ FPS. War Thunder’s VR mode has its own FOV and should be set so the virtual
+cockpit aligns with your real seat position. No in-game “VR controller” bindings exist; use your
+13
+normal HOTAS/keyboard in VR (WT treats VR controllers as generic gamepad) .
+Recommended Graphics Tips:
+•
+•
+•
+•
+•
+Prioritize frame rate (>120 FPS) over eye candy. A stable 120+ is more important than ultra detail.
+Disable distracting effects (shadows, lens flare).
+Use no clouds + clear weather servers if you want maximum spotting (but this can be contentious –
+if allowed by rules).
+Keep contrast/brightness at defaults, as darkness settings can hide camouflaged planes.
+For VR: ensure v-sync off (OpenXR uses its own vsync) and use GPU driver settings (NVIDIA Control
+Panel) to favor performance.
+Audio Settings (Awareness)
+Good sound settings help hear enemy planes/missiles:
+•
+•
+•
+•
+•
+•
+Surround vs Stereo: If using headphones, set Stereo in WT audio options. Surround modes often
+fail or degrade quality 14
+. Disable Windows Spatial Sound (Sonic/DTS) as it can distort audio.
+Volume Sliders: Recent analysis suggests: set Other Players’ Engine volume lower (~60–70%) and
+My Engine very low (~20–30%) 15 16
+. This makes distant engines (others) audible without your
+own engine drowning them out.
+Keep Gunfire ~70–80% (so hits and nearby tracers are audible), Armor/SFX ~50–60%. Mute music
+17
+and voices (“Everything else” to 0) to avoid distractions .
+Directional Sound: Ensure 3D positional audio is on (default). This lets you tell direction of aircraft
+firing or passing.
+Tactical Audio: Consider external sound packs or equalizer presets that emphasize engine roar and
+wind (some pilots use custom EQ to accentuate high frequencies for missile whines).
+Communication: If flying with a squadron, ensure VoIP is set up and volumes balanced. For solo,
+turn off squad chat if unneeded.
+5
+Network & Performance Tips
+•
+•
+•
+•
+•
+•
+•
+Server Selection: In Options → Network, set Server Selection to your region or “auto”. Avoid high-
+ping servers. WT matchmaking usually gives your ping ranking, but confirming it helps.
+Wired Ethernet: Use a wired connection for lowest latency. Close other bandwidth-heavy apps.
+Prioritize GPU: In your OS and drivers, prioritize War Thunder’s process (e.g. set high priority in Task
+Manager, or use NVIDIA “prefer maximum performance”).
+Limit FPS or vsync: Cap FPS above your monitor’s refresh (e.g. 200 fps on 144Hz) to avoid tearing.
+Turn v-sync off (lower input lag) unless screen tearing is unbearable.
+Frame Time Consistency: Use a fast SSD (game on SSD, not HDD). Close overlays (Discord, Steam) if
+they stutter. Some players lock min-fps via GPU driver or 3rd-party tools for steadiness.
+Ping/Firewall: War Thunder uses UDP ports 20000-26000. If behind a restrictive firewall/NAT,
+forward these for fewer packet losses. On PC, allow War Thunder through Windows Firewall.
+Mods/Cheats: Only use approved mods (custom GUI, etc.). Third-party hacks cause bans and can
+affect performance.
+Community Presets & Comparison
+Players share control presets on WT Live and forums. Top RB/SB pilots often use:
+Setting / Device Beginner Intermediate Competitive/Pro
+Dead Zone ~0–3% (stick is new) ~3–5% (in-game) ~3–5% (hardware
+2
+adjusted)
+Pitch & Roll
+Sens.
+50–70% (Arcade;
+gentle)
+6
+~80–90% (build as skills
+grow) 100% (full precision)
+6
+Yaw Sens. Off or low (<20%) 20–30% (for flatspin
+control) 30–50% (if using pedals)
+Nonlinearity ~1.0–1.3 (nearly linear) ~1.5–2.0 (moderate curve) ~2.0 (high precision near
+8 9
+center)
+Flight Model Arcade (stability) Realistic Sim (full model)
+Mouse Aim
+(AB)
+Use lead indicator
+(Arcade) Off, fixed reticle (RB) Off, require manual lead
+HUD Markers Enabled (helps
+spotting) Allies On, Enemies Quick Off (no assists)
+Chase Cam Off (prefer cockpit) - -
+Enemy Icons Show (Arcade default) Show on trace (T) Disable
+Graphics Medium details, V-sync
+Off Low details, V-sync Off Low details, V-sync Off
+6
+Setting / Device Beginner Intermediate Competitive/Pro
+Sound (Vol.) Master ~80%, Engines
+Engines ~70%, Own ~30% 60%
+15 16
+Engines ~70%, Own ~20%
+(Values are illustrative; individual hardware differences apply.)
+Example Pro Presets: Community posts (WT Live) show many flyers using ~5% stick deadzones,
+nonlinearity ~1.5–2, and full (100%) pitch/roll sensitivity in Realistic/SB. Mouse aim users often set 100%
+sensitivity in RB. Competitive console players disable the “use recommended dead zone” toggle 1
+for
+fastest input. Advanced joystick pilots customize per-plane throttle curves and trim.
+Common Pitfalls
+•
+•
+•
+•
+•
+•
+•
+Double Deadzone: Avoid setting deadzones in both Windows/Game/Stick simultaneously. Two
+2
+layers kill precision .
+Recommended Dead Zone (console): On controllers, always turn off “Use Recommended Dead
+1
+Zone” – it imposes a large hidden deadzone. Many high-level players recommend disabling it .
+Inconsistent Controls: Changing sensitivity or curves often requires re-learning; stick to one
+scheme per battle mode. Avoid frequent toggling of “Simplified” vs “Full Real”.
+Overriding Presets: Importing a preset overwrites everything; always back up your scheme. After
+major updates, always check if Axis mappings reset.
+Over-Aggressive Nonlinearity: Excessive curve (>2.5) can make the stick twitchy at edges (risking
+stalls) 18
+. Test changes in free flight.
+Graphics Effects: Turning high-quality clouds or terrain can hurt FPS and delay target detection.
+Audio Overkill: Setting engine volumes too high (100%) may distort audio and mask others’ engines
+19
+. Balance for clarity.
+References
+• 3 5
+Gaijin Support – Joystick Setup (official Wizard steps) ; Controls Scheme Reset (restore defaults) .
+• 20 21
+War Thunder Wiki – Setting up control axis and sensitivity (dead zone, nonlinearity) .
+• 2
+Community guides/forums – Flight stick setup guide (deadzone ~5%) ; Warpig forum post
+6
+(sensitivity advice) .
+• 11
+War Thunder Wiki – HUD mechanics (reticle/HUD modes) .
+• 19 16
+Community posts – audio tuning (engine volume recommendations) ; VR controller note (WT
+currently lacks native VR controller support 13
+).
+Open Questions / Assumptions
+•
+•
+Controller vs Joystick Terminology: We assume Xbox-style gamepads and PC HOTAS have separate
+settings. Some “gamepad” advice overlaps with joystick.
+VR Controls: Gaijin has not released native VR controller bindings; we assume normal HOTAS/
+13
+keyboard are used in VR .
+7
+•
+•
+Graphics/Network Variability: Optimal settings depend on hardware; suggestions above favor
+competitive play (high FPS). Low-end PCs may accept lower FPS for visibility.
+Preset Variability: “Pro player” settings vary widely; tables above are based on community
+consensus, not a single source. Always test in trial flights.
+1
+Have you tried playing with the recommended dead-zone disabled? - Platform specific issues (PS4, PS5,
+Xbox, other) - War Thunder — official forum
+https://forum.warthunder.com/t/have-you-tried-playing-with-the-recommended-dead-zone-disabled/316609
+2 9
+Flight Stick Setup Guide: - Realistic Battle - War Thunder — official forum
+https://forum.warthunder.com/t/flight-stick-setup-guide/18759
+3
+Joystick Setup – Gaijin Support
+https://support.gaijin.net/hc/en-us/articles/200070391-Joystick-Setup
+4 5
+Controls scheme reset – Gaijin Support
+https://support.gaijin.net/hc/en-us/articles/200074252-Controls-scheme-reset
+6 10
+Joystick or No...? - Arcade Battle - War Thunder — official forum
+https://forum.warthunder.com/t/joystick-or-no/38432
+7
+Can anyone give me a ps5 setup for air RB these controls i got right ...
+https://www.reddit.com/r/Warthunder/comments/1awtogh/can_anyone_give_me_a_ps5_setup_for_air_rb_these/
+8 18 20 21
+Setting up control axis and sensitivity | War Thunder Wiki
+https://wiki.warthunder.com/controls/4785-setting-up-control-axis-and-sensitivity
+11 12
+HUD | War Thunder Wiki
+https://wiki.warthunder.com/mechanics/236-hud
+13
+How to set war thunder quest 3 vr controllers settings in this game? : r/Warthunder
+https://www.reddit.com/r/Warthunder/comments/1plpn7x/how_to_set_war_thunder_quest_3_vr_controllers/
+14
+Surround sound issue - Community Technical Support - War Thunder — official forum
+https://forum.warthunder.com/t/surround-sound-issue/181544
+15 16 17 19
+War Thunder Optimal Sound Settings – Protect Your Ears & Improve Awareness : r/
+Warthunder
+https://www.reddit.com/r/Warthunder/comments/1j4v1id/war_thunder_optimal_sound_settings_protect_your/</p>
+  
+</body>
+</html>
