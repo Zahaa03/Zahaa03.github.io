@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mamma Log</title>
+  <style>
+    :root{--bg:#f6f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--accent:#111827;--line:#e5e7eb}
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+    body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center;padding:20px}
+    .app{width:100%;max-width:780px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 8px 24px rgba(0,0,0,.04)}
+    h1,h2{margin:0 0 14px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .col{display:flex;flex-direction:column;gap:8px}
+    label{font-size:.9rem;color:var(--muted)}
+    input,textarea,select,button{font:inherit}
+    input,textarea,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+    textarea{min-height:180px;resize:vertical}
+    button{padding:10px 14px;border-radius:10px;border:1px solid #111827;background:#111827;color:#fff;cursor:pointer}
+    button.secondary{background:#fff;color:#111827}
+    button.ghost{border-color:var(--line);background:#fff;color:#111827}
+    .top-actions{display:flex;gap:10px}
+    .hidden{display:none!important}
+    .list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+    .item{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+    .meta{font-size:.85rem;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+    .title{font-weight:600;margin-bottom:6px}
+    .content{white-space:pre-wrap;margin-top:8px}
+    .muted{color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="screen-lock" class="card">
+      <input id="passwordInput" type="password" placeholder="Password" autocomplete="off" />
+    </section>
+
+    <section id="screen-home" class="card hidden">
+      <h1>Mamma Log</h1>
+      <div class="top-actions">
+        <button id="btnNew">New</button>
+        <button id="btnBrowse" class="secondary">Browse</button>
+      </div>
+    </section>
+
+    <section id="screen-new" class="card hidden">
+      <h2>New Entry</h2>
+      <div class="col">
+        <label for="titleInput">Title</label>
+        <input id="titleInput" type="text" placeholder="Title" />
+
+        <label for="contentInput">Contents</label>
+        <textarea id="contentInput" placeholder="Write here..."></textarea>
+
+        <label for="dateInput">Date & Time</label>
+        <input id="dateInput" type="datetime-local" />
+
+        <label for="tagInput">#</label>
+        <div class="row">
+          <input id="tagInput" type="text" placeholder="#" style="flex:1" />
+          <button id="btnBrowseTags" type="button" class="ghost">Browse #</button>
+          <button id="btnNewTag" type="button" class="ghost">New #</button>
+        </div>
+
+        <div class="row" style="margin-top:8px">
+          <button id="btnSave">Save</button>
+          <button id="btnCancelNew" class="secondary" type="button">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-browse" class="card hidden">
+      <h2>Browse Entries</h2>
+      <div class="row">
+        <select id="sortSelect" style="min-width:180px">
+          <option value="new">New to old</option>
+          <option value="old">Old to new</option>
+        </select>
+        <select id="tagFilter" style="min-width:180px">
+          <option value="">All #</option>
+        </select>
+        <button id="btnBackHome" class="secondary" type="button">Back</button>
+      </div>
+      <div id="entryList" class="list"></div>
+      <p id="emptyState" class="muted hidden">No entries yet.</p>
+    </section>
+
+    <section id="screen-tags" class="card hidden">
+      <h2>Browse #</h2>
+      <div id="tagList" class="list"></div>
+      <div class="row" style="margin-top:10px">
+        <button id="btnCloseTags" class="secondary" type="button">Close</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (() => {
+      const K_ENTRIES = "mamma_log_entries_v1";
+      const K_TAGS = "mamma_log_tags_v1";
+
+      const screens = {
+        lock: document.getElementById("screen-lock"),
+        home: document.getElementById("screen-home"),
+        fresh: document.getElementById("screen-new"),
+        browse: document.getElementById("screen-browse"),
+        tags: document.getElementById("screen-tags")
+      };
+
+      const passwordInput = document.getElementById("passwordInput");
+      const btnNew = document.getElementById("btnNew");
+      const btnBrowse = document.getElementById("btnBrowse");
+      const btnSave = document.getElementById("btnSave");
+      const btnCancelNew = document.getElementById("btnCancelNew");
+      const btnBackHome = document.getElementById("btnBackHome");
+      const btnBrowseTags = document.getElementById("btnBrowseTags");
+      const btnNewTag = document.getElementById("btnNewTag");
+      const btnCloseTags = document.getElementById("btnCloseTags");
+
+      const titleInput = document.getElementById("titleInput");
+      const contentInput = document.getElementById("contentInput");
+      const dateInput = document.getElementById("dateInput");
+      const tagInput = document.getElementById("tagInput");
+
+      const entryList = document.getElementById("entryList");
+      const emptyState = document.getElementById("emptyState");
+      const sortSelect = document.getElementById("sortSelect");
+      const tagFilter = document.getElementById("tagFilter");
+      const tagList = document.getElementById("tagList");
+
+      const show = (name) => {
+        Object.values(screens).forEach(s => s.classList.add("hidden"));
+        screens[name].classList.remove("hidden");
+      };
+
+      const nowLocalISO = () => {
+        const d = new Date();
+        d.setSeconds(0,0);
+        const pad = (n) => String(n).padStart(2,'0');
+        return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      };
+
+      const loadEntries = () => {
+        try { return JSON.parse(localStorage.getItem(K_ENTRIES) || "[]"); } catch { return []; }
+      };
+      const saveEntries = (arr) => localStorage.setItem(K_ENTRIES, JSON.stringify(arr));
+
+      const loadTags = () => {
+        try { return JSON.parse(localStorage.getItem(K_TAGS) || "[]"); } catch { return []; }
+      };
+      const saveTags = (arr) => localStorage.setItem(K_TAGS, JSON.stringify(arr));
+
+      const ensureTag = (t) => {
+        const tag = (t || "").trim();
+        if (!tag) return;
+        const tags = loadTags();
+        if (!tags.includes(tag)) {
+          tags.push(tag);
+          saveTags(tags);
+        }
+      };
+
+      const refreshTagFilter = () => {
+        const current = tagFilter.value;
+        const tags = loadTags().sort((a,b)=>a.localeCompare(b));
+        tagFilter.innerHTML = `<option value="">All #</option>` + tags.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("");
+        if (tags.includes(current)) tagFilter.value = current;
+      };
+
+      const renderTagsChooser = () => {
+        const tags = loadTags().sort((a,b)=>a.localeCompare(b));
+        tagList.innerHTML = "";
+        if (!tags.length) {
+          tagList.innerHTML = `<p class="muted">No # yet.</p>`;
+          return;
+        }
+        tags.forEach(t => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "ghost";
+          b.textContent = t;
+          b.onclick = () => {
+            tagInput.value = t;
+            show("fresh");
+          };
+          tagList.appendChild(b);
+        });
+      };
+
+      const renderEntries = () => {
+        const mode = sortSelect.value;
+        const filt = tagFilter.value.trim();
+        let items = loadEntries();
+        if (filt) items = items.filter(e => (e.tag || "") === filt);
+
+        items.sort((a,b)=> mode === "new" ? (new Date(b.datetime)-new Date(a.datetime)) : (new Date(a.datetime)-new Date(b.datetime)));
+
+        entryList.innerHTML = "";
+        emptyState.classList.toggle("hidden", items.length !== 0);
+
+        items.forEach(e => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = `
+            <div class="title">${escapeHtml(e.title || "(Untitled)")}</div>
+            <div class="meta">
+              <span>${escapeHtml(formatDate(e.datetime))}</span>
+              <span># ${escapeHtml(e.tag || "-")}</span>
+              <span>${escapeHtml(e.createdNote || "")}</span>
+            </div>
+            <div class="content">${escapeHtml(e.content || "")}</div>
+          `;
+          entryList.appendChild(div);
+        });
+      };
+
+      const formatDate = (iso) => {
+        const d = new Date(iso);
+        if (Number.isNaN(+d)) return iso || "";
+        return d.toLocaleString([], {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+      };
+
+      const escapeHtml = (s) => String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+      const resetNewForm = () => {
+        titleInput.value = "";
+        contentInput.value = "";
+        dateInput.value = nowLocalISO();
+        tagInput.value = "";
+      };
+
+      const h = async (v) => {
+        const b = new TextEncoder().encode(v);
+        const d = await crypto.subtle.digest("SHA-256", b);
+        return Array.from(new Uint8Array(d)).map(x=>x.toString(16).padStart(2,'0')).join('');
+      };
+
+      const g = [
+        0x61,0x36,0x36,0x35,0x61,0x34,0x35,0x39,0x32,0x30,0x34,0x32,0x32,0x66,0x39,0x64,
+        0x34,0x31,0x37,0x65,0x34,0x38,0x36,0x37,0x65,0x64,0x61,0x62,0x64,0x62,0x64,0x36,
+        0x63,0x61,0x62,0x62,0x33,0x32,0x38,0x33,0x35,0x31,0x34,0x33,0x65,0x61,0x35,0x39,
+        0x61,0x36,0x66,0x62,0x34,0x36,0x65,0x66,0x61,0x32,0x62,0x61,0x63,0x62,0x63,0x66
+      ];
+      const p = String.fromCharCode(...g);
+
+      passwordInput.addEventListener("keydown", async (e) => {
+        if (e.key !== "Enter") return;
+        const entered = passwordInput.value || "";
+        const dig = await h(entered);
+        if (dig === p) {
+          passwordInput.value = "";
+          show("home");
+        }
+      });
+
+      btnNew.onclick = () => { resetNewForm(); show("fresh"); };
+      btnBrowse.onclick = () => { refreshTagFilter(); renderEntries(); show("browse"); };
+      btnBackHome.onclick = () => show("home");
+      btnCancelNew.onclick = () => show("home");
+
+      btnBrowseTags.onclick = () => { renderTagsChooser(); show("tags"); };
+      btnCloseTags.onclick = () => show("fresh");
+
+      btnNewTag.onclick = () => {
+        const t = prompt("Enter new #");
+        if (!t || !t.trim()) return;
+        ensureTag(t.trim());
+        tagInput.value = t.trim();
+        refreshTagFilter();
+      };
+
+      sortSelect.onchange = renderEntries;
+      tagFilter.onchange = renderEntries;
+
+      btnSave.onclick = () => {
+        const t = titleInput.value.trim();
+        const c = contentInput.value.trim();
+        const dt = dateInput.value || nowLocalISO();
+        const tg = tagInput.value.trim();
+
+        if (tg) ensureTag(tg);
+
+        const entries = loadEntries();
+        entries.push({
+          id: crypto.randomUUID(),
+          title: t,
+          content: c,
+          datetime: dt,
+          tag: tg,
+          createdAt: new Date().toISOString(),
+          createdNote: dateInput.value ? "" : "Date/time auto-set to current"
+        });
+        saveEntries(entries);
+        refreshTagFilter();
+        renderEntries();
+        show("home");
+      };
+
+      resetNewForm();
+      refreshTagFilter();
+      show("lock");
+    })();
+  </script>
+</body>
+</html>
